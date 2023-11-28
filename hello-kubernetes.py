@@ -65,12 +65,12 @@ task_pi = PythonOperator(
                         "name": "base",
                         "resources": {
                             "requests": {
-                                "cpu": "100m"
-                                "memory": "256Mi"
+                                "cpu": "100m",
+                                "memory": "256Mi",
                             },
                             "limits": {
-                                "cpu": "1"
-                                "memory": "2Gi"
+                                "cpu": "1",
+                                "memory": "2Gi",
                             }
                         }
                     }
