@@ -4,6 +4,7 @@ import math
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from kubernetes.client import models as k8s
+from airflow.utils.dates import days_ago
 
 # Define default_args dictionary to pass to the DAG
 default_args = {
