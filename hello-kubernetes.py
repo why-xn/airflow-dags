@@ -45,32 +45,14 @@ def  estimate_pi():
     print("Calculated pi:")
     print(pi_estimate)
 
+start_task = DummyOperator(task_id='start', dag=dag)
+end_task = DummyOperator(task_id='end', dag=dag)
+
 # Create a task using the PythonOperator
 task_hello = PythonOperator(
     task_id='print_hello_task',
     python_callable=print_hello,
     dag=dag,
-    executor_config={
-        "pod_override": k8s.V1Pod{
-            spec=k8s.V1PodSpec{
-                containers=[
-                    k8s.V1Container{
-                        name="base",
-                        resources=k8s.V1ResourceRequirements{
-                            requests={
-                                "cpu": "100m",
-                                "memory": "256Mi",
-                            },
-                            limits={
-                                "cpu": "1",
-                                "memory": "2Gi",
-                            }
-                        }
-                    }
-                ]    
-            }
-        }
-    }
 )
 
 # Create a task using the PythonOperator
@@ -78,29 +60,9 @@ task_pi = PythonOperator(
     task_id='estimate_pi_task',
     python_callable=estimate_pi,
     dag=dag,
-    executor_config={
-        "pod_override": k8s.V1Pod{
-            spec=k8s.V1PodSpec{
-                containers=[
-                    k8s.V1Container{
-                        name="base",
-                        resources=k8s.V1ResourceRequirements{
-                            requests={
-                                "cpu": "100m",
-                                "memory": "256Mi",
-                            },
-                            limits={
-                                "cpu": "1",
-                                "memory": "2Gi",
-                            }
-                        }
-                    }
-                ]    
-            }
-        }
-    }
 )
 
 # Set task dependencies
-task_hello >> task_pi
+start >> task_hello >> end
+start >> task_pi >> end
 
