@@ -5,7 +5,8 @@ from airflow.operators.python_operator import PythonOperator
 # Define default_args dictionary to pass to the DAG
 default_args = {
     'owner': 'airflow',
-    'depends_on_past': False
+    'depends_on_past': False,
+    'start_date': datetime(2023, 11, 25),
 }
 
 # Instantiate a DAG
