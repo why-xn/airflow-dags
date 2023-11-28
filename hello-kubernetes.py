@@ -8,14 +8,17 @@ from airflow.operators.python_operator import PythonOperator
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2023, 11, 25),
+    'start_date': days_ago(1),
 }
 
 # Instantiate a DAG
 dag = DAG(
-    'hello_kubernetes_dag',
+    'hello_k8_dag',
     default_args=default_args,
     description='A simple Airflow DAG with KubernetesExecutor',
+    schedule_interval=None,
+    catchup=False,
+    max_active_runs=2
 )
 
 # Define a Python function to be executed by the task
@@ -45,6 +48,27 @@ task_hello = PythonOperator(
     task_id='print_hello_task',
     python_callable=print_hello,
     dag=dag,
+    executor_config={
+        "pod_override": k8s.V1Pod{
+            spec=k8s.V1PodSpec{
+                containers=[
+                    k8s.V1Container{
+                        name="base",
+                        resources=k8s.V1ResourceRequirements{
+                            requests={
+                                "cpu": "100m"
+                                "memory": "256Mi"
+                            },
+                            limits={
+                                "cpu": "1"
+                                "memory": "2Gi"
+                            }
+                        }
+                    }
+                ]    
+            }
+        }
+    }   
 )
 
 # Create a task using the PythonOperator
@@ -52,6 +76,27 @@ task_pi = PythonOperator(
     task_id='estimate_pi_task',
     python_callable=estimate_pi,
     dag=dag,
+    executor_config={
+        "pod_override": k8s.V1Pod{
+            spec=k8s.V1PodSpec{
+                containers=[
+                    k8s.V1Container{
+                        name="base",
+                        resources=k8s.V1ResourceRequirements{
+                            requests={
+                                "cpu": "100m"
+                                "memory": "256Mi"
+                            },
+                            limits={
+                                "cpu": "1"
+                                "memory": "2Gi"
+                            }
+                        }
+                    }
+                ]    
+            }
+        }
+    }
 )
 
 # Set task dependencies
