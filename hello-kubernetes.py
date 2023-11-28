@@ -57,6 +57,27 @@ task_pi = PythonOperator(
     task_id='estimate_pi_task',
     python_callable=estimate_pi,
     dag=dag,
+    executor_config={
+        "pod_override": {
+            "spec": {
+                "containers": [
+                    {
+                        "name": "base",
+                        "resources": {
+                            "requests": {
+                                "cpu": "100m"
+                                "memory": "256Mi"
+                            },
+                            "limits": {
+                                "cpu": "1"
+                                "memory": "2Gi"
+                            }
+                        }
+                    }
+                ]    
+            }
+        }
+    }
 )
 
 # Set task dependencies
