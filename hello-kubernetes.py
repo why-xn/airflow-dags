@@ -64,6 +64,6 @@ task_pi = PythonOperator(
 )
 
 # Set task dependencies
-start >> task_hello >> end
-start >> task_pi >> end
+start_task >> task_hello >> end_task
+start_task >> task_pi >> end_task
 
