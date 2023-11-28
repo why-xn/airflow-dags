@@ -57,27 +57,6 @@ task_pi = PythonOperator(
     task_id='estimate_pi_task',
     python_callable=estimate_pi,
     dag=dag,
-    executor_config={
-        "pod_override": k8s.V1Pod{
-            spec=k8s.V1PodSpec{
-                containers=[
-                    k8s.V1Container{
-                        name="base",
-                        resources=k8s.V1ResourceRequirements{
-                            requests={
-                                "cpu": "100m"
-                                "memory": "256Mi"
-                            },
-                            limits={
-                                "cpu": "1"
-                                "memory": "2Gi"
-                            }
-                        }
-                    }
-                ]    
-            }
-        }
-    }   
 )
 
 # Set task dependencies
